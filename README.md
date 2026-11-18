@@ -21,3 +21,15 @@ docker compose up --build
 
 同一输入内容生成相同运行标识，重复执行复用已有批次。隔离记录包含原因码、原始行号与原值；业务导出只保留一份证据清单。
 
+## 关账后税额更正
+
+月结关账后收到供应商发票更正单时，原批次审计数字保持不变，更正税额差额进入差异批次：
+
+1. `POST /api/batches/closed` 登记关账快照（税额、含税额、按业务键的明细）。
+2. `POST /api/documents/corrections/accept` 采信更正单：引用批次不存在或原税额与关账快照不一致即隔离。
+3. `POST /api/tax/adjustment-delta` 计算新旧税额带符号差额（调低为负，Decimal 半入到分）。
+4. `POST /api/batches/corrections` 将差额以 TAX_ADJUSTMENT 入差异批次并关联原批次；重跑同一张更正单不重复入账。
+5. `GET /api/batches/corrections` 与 /batches 页面的“税额更正追溯”面板可从调整查到对应原批次。
+
+样例：`sample_data/tax_corrections.json`。
+

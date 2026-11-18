@@ -1,0 +1,4 @@
+{"corrections": [
+  {"correction_no": "CN-001", "source_run_id": "procurematch-rules-1-closed01", "doc_no": "IV-001", "sku": "000142", "tax_rate": "13%", "old_tax": "130.00", "new_tax": "117.00"},
+  {"correction_no": "CN-002", "source_run_id": "procurematch-rules-1-closed01", "doc_no": "IV-002", "sku": "000777", "tax_rate": "0.09", "old_tax": "90.00", "new_tax": "84.00"}
+]}

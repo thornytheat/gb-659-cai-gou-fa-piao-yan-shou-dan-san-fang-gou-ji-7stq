@@ -6,5 +6,7 @@ REASONS = {
     "TRUNCATED_INPUT": "输入尾部不完整",
     "UNKNOWN_REFERENCE": "引用对象不存在",
     "RECONCILE_DIFF": "对账不相等",
+    "CLOSED_BATCH_MISMATCH": "原批次关账快照与更正单原值不一致",
+    "TAX_ADJUSTMENT": "关账后税额更正差额",
 }
 

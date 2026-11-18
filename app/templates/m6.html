@@ -23,5 +23,37 @@
     <div class="panel__body"><div class="bar"><i style="width:85%"></i></div><div class="legend"><span>采纳 2</span><span>隔离 3</span></div></div>
   </section>
 </div>
+<section class="panel panel--trace">
+  <div class="panel__head"><h2>税额更正追溯</h2><span class="panel__meta">原批次关账快照不可变 · 接口 <code>GET /api/batches/corrections</code></span></div>
+  <div class="panel__body panel__body--scroll">
+    <table class="ledger">
+      <thead><tr><th>更正单号</th><th>调整批次</th><th>原批次（关账）</th><th>业务键</th><th>来源行</th><th class="num">原税额</th><th class="num">更正税额</th><th class="num">税额差额</th><th>原因码</th></tr></thead>
+      <tbody id="trace-body">
+        <tr class="trace-empty"><td colspan="9">运行更正流程后在此查看调整与原批次的对应关系</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
 {% endblock %}
-
+{% block scripts %}
+<script>
+(async function(){
+  try{
+    const response = await fetch("/api/batches/corrections");
+    if(!response.ok) return;
+    const data = await response.json();
+    const body = document.querySelector("#trace-body");
+    if(!data.adjustments.length) return;
+    body.innerHTML = "";
+    for(const row of data.adjustments){
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td>${row.correction_no}</td><td>${row.run_id}</td><td>${row.source_run_id}</td>` +
+        `<td>${row.business_key}</td><td class="num">${row.line_no}</td>` +
+        `<td class="num">${row.old_tax_cny}</td><td class="num">${row.new_tax_cny}</td>` +
+        `<td class="num">${row.tax_delta_cny}</td><td>${row.reason_code}</td>`;
+      body.appendChild(tr);
+    }
+  }catch(error){ /* 追溯面板静默降级，不影响页面其余部分 */ }
+})();
+</script>
+{% endblock %}
